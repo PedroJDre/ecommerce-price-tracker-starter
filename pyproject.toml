@@ -1,0 +1,49 @@
+[project]
+name = "ecommerce-price-tracker"
+version = "0.1.0"
+description = "Track e-commerce prices across stores and marketplaces, get alerts on drops, and publish a price history dashboard."
+readme = "README.md"
+authors = [
+    { name = "Pedro Dreyer" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "httpx>=0.28.1",
+]
+
+[project.optional-dependencies]
+llm = [
+    "langchain>=1.4.7",
+    "langchain-anthropic>=1.7.7",
+]
+
+[project.scripts]
+tracker = "price_tracker.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.10.10,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "respx>=0.23.1",
+    "ruff>=0.17.3",
+]
+
+[tool.uv.build-backend]
+module-name = "price_tracker"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/price_tracker/report.py" = ["E501"]  # inline HTML/CSS

@@ -1,0 +1,50 @@
+# Copy this file to watchlist.toml and edit it. Secrets (tokens, passwords) go in environment
+# variables, never here. See the README for every option.
+
+[settings]
+title = "Price tracker · live demo"
+drop_threshold_percent = 5     # ignore price moves smaller than this
+delay_seconds = 1.5            # pause between requests to the same store
+# llm_fallback = true          # read pages without structured data with an LLM (uv sync --extra llm)
+# llm_model = "anthropic:claude-haiku-5-5"
+
+[alerts]
+console = true
+telegram = false               # needs TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
+webhook = false                # Slack or Discord: needs ALERT_WEBHOOK_URL
+email = false                  # needs SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, ALERT_EMAIL_TO
+events = ["price_drop", "below_target", "back_in_stock", "new_listing"]
+
+# --- Single products ------------------------------------------------------------------------
+# source = "page" works on any store that publishes structured price data (most do).
+
+[[product]]
+name = "Allbirds Tree Runner"
+url = "https://www.allbirds.com/products/mens-tree-runners"
+target_price = 80
+
+[[product]]
+name = "Allbirds Wool Runner"
+source = "shopify"             # Shopify stores: reads the store's product JSON directly
+url = "https://www.allbirds.com/products/mens-wool-runners"
+
+# --- Searches: many listings at once -------------------------------------------------------
+
+[[search]]
+name = "Allbirds men's runners"
+source = "shopify"
+url = "https://www.allbirds.com/collections/mens"   # a whole store or one collection
+include = ["runner"]                                  # every word must be in the title
+exclude = ["sock", "insole", "lace"]                  # none of these
+max_results = 60
+
+# Mercado Libre needs a free API token (MELI_ACCESS_TOKEN, see README).
+# [[search]]
+# name = "BAIC cars on Mercado Libre"
+# source = "mercadolibre"
+# site = "MLA"                 # MLA Argentina, MLB Brazil, MLM Mexico, MLC Chile, MCO Colombia...
+# query = "baic"
+# include = ["baic"]
+# exclude = ["repuesto", "parrilla", "faro", "llanta"]
+# min_price = 5000             # skip parts and accessories
+# max_results = 200
